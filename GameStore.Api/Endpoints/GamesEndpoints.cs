@@ -30,7 +30,7 @@ private static readonly List<GameDto> games = [
 public static RouteGroupBuilder MapGamesEndpoints(this WebApplication app)
 {
 
-    var group = app.MapGroup("games");
+    var group = app.MapGroup("games").WithParameterValidation();
 
     group.MapGet("/", ()=> games);
 
@@ -45,6 +45,9 @@ public static RouteGroupBuilder MapGamesEndpoints(this WebApplication app)
     .WithName(GetGameEndpointName);
 
     group.MapPost("/", (CreateGameDto newGame)=> {
+
+
+
       GameDto game = new(
       games.Count + 1,
       newGame.Name,
@@ -55,7 +58,7 @@ public static RouteGroupBuilder MapGamesEndpoints(this WebApplication app)
       games.Add(game);
 
       return Results.CreatedAtRoute(GetGameEndpointName, new { id = game.Id }, game);
-    });
+    }); 
 
     group.MapPut("/{id}", (int id, UpdateGameDto updatedGame)=>
     {
